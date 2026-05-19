@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useState } from "react";
 
 interface DashboardClientProps {
@@ -11,11 +13,13 @@ export default function DashboardClient({ accessToken }: DashboardClientProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL || "";
+
   const fetchProtectedData = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("http://localhost:8081/api/data", {
+      const res = await fetch(`${backendApiUrl}/api/data`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -28,7 +32,7 @@ export default function DashboardClient({ accessToken }: DashboardClientProps) {
       const json = await res.json();
       setData(json);
     } catch (err: any) {
-      setError(err.message || "Gagal memanggil API");
+      setError(err.message || "Gagal menghubungi backend");
     } finally {
       setLoading(false);
     }
@@ -36,19 +40,19 @@ export default function DashboardClient({ accessToken }: DashboardClientProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-2">
-        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+      <div className="space-y-1.5">
+        <h2 className="text-sm font-bold text-slate-900 dark:text-zinc-50">
           Uji Coba Koneksi ke Go Backend (laci-v3/be)
-        </h3>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          Tombol di bawah akan mengirimkan Access Token SSO Anda ke backend Go (`http://localhost:8081/api/data`) untuk diverifikasi secara aman.
+        </h2>
+        <p className="text-[11px] text-slate-500 dark:text-zinc-400 leading-normal">
+          Tombol di bawah akan mengirimkan Access Token SSO Anda ke backend Go untuk diverifikasi secara aman.
         </p>
       </div>
 
       <button
         onClick={fetchProtectedData}
         disabled={loading}
-        className="inline-flex h-9 items-center justify-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+        className="inline-flex h-9 items-center justify-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 cursor-pointer"
       >
         {loading ? "Memuat..." : "Panggil API Backend"}
       </button>
@@ -62,7 +66,7 @@ export default function DashboardClient({ accessToken }: DashboardClientProps) {
 
       {data && (
         <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 font-mono text-xs dark:border-zinc-800 dark:bg-zinc-900/50">
-          <p className="font-bold mb-2 text-zinc-700 dark:text-zinc-300">// Response dari Go Backend:</p>
+          <p className="font-bold mb-2 text-zinc-700 dark:text-zinc-300">{"// Response dari Go Backend:"}</p>
           <pre className="overflow-x-auto text-zinc-600 dark:text-zinc-400">
             {JSON.stringify(data, null, 2)}
           </pre>

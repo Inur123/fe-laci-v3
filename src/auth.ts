@@ -1,4 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import NextAuth from "next-auth";
+
+const ssoUrl = process.env.NEXT_PUBLIC_SSO_URL || "";
+const ssoApiUrl = process.env.NEXT_PUBLIC_SSO_API_URL || "";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -7,11 +12,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       name: "SSO IPNU Magetan",
       type: "oauth",
       authorization: {
-        url: process.env.SSO_AUTHORIZATION_URL,
+        url: `${ssoUrl}/oauth/authorize`,
         params: { scope: "basic_info email phone" },
       },
-      token: process.env.SSO_TOKEN_URL,
-      userinfo: process.env.SSO_USERINFO_URL,
+      token: `${ssoApiUrl}/oauth/token`,
+      userinfo: `${ssoApiUrl}/v1/user/me`,
       clientId: process.env.SSO_CLIENT_ID,
       clientSecret: process.env.SSO_CLIENT_SECRET,
       profile(profile: any) {
