@@ -5,6 +5,7 @@
 import { signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Image from "next/image";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, LogOut, MoreHorizontal } from "lucide-react";
@@ -102,9 +103,11 @@ export default function DashboardSidebar({
                 onClick={() => handleNavigate("/dashboard")}
               >
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg overflow-hidden shrink-0">
-                  <img
+                  <Image
                     src="/logo-sso.png"
                     alt="Laci v3"
+                    width={32}
+                    height={32}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -137,7 +140,7 @@ export default function DashboardSidebar({
                         className={cn(
                           "transition-all duration-200",
                           active
-                            ? "bg-emerald-50/90 dark:bg-emerald-950/30 !text-emerald-700 dark:!text-emerald-400 font-semibold"
+                            ? "bg-emerald-50/90 dark:bg-emerald-950/30 text-emerald-700! dark:text-emerald-400! font-semibold"
                             : "hover:bg-slate-100/80 dark:hover:bg-zinc-800/80 text-slate-700 dark:text-zinc-300",
                         )}
                       >
@@ -145,14 +148,14 @@ export default function DashboardSidebar({
                           className={cn(
                             "h-4 w-4",
                             active
-                              ? "!text-emerald-600 dark:!text-emerald-400"
+                              ? "text-emerald-600! dark:text-emerald-400!"
                               : "text-slate-500 dark:text-zinc-400",
                           )}
                         />
                         <span
                           className={cn(
                             active
-                              ? "!text-emerald-700 dark:!text-emerald-400 font-semibold"
+                              ? "text-emerald-700! dark:text-emerald-400! font-semibold"
                               : "text-slate-700 dark:text-zinc-300",
                           )}
                         >
@@ -177,14 +180,17 @@ export default function DashboardSidebar({
                   render={
                     <SidebarMenuButton
                       size="lg"
-                      className="data-[popup-open]:bg-sidebar-accent data-[popup-open]:text-sidebar-accent-foreground"
+                      className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground"
                     >
                       <div className="size-8 rounded-lg overflow-hidden bg-sidebar-primary/10 flex items-center justify-center font-medium text-xs border border-sidebar-border shrink-0">
                         {displayAvatar ? (
-                          <img
+                          <Image
                             src={displayAvatar}
                             alt={name}
+                            width={32}
+                            height={32}
                             className="size-full object-cover"
+                            unoptimized
                           />
                         ) : (
                           <span>{name.charAt(0).toUpperCase()}</span>
@@ -208,10 +214,13 @@ export default function DashboardSidebar({
                   <div className="flex items-center gap-2 px-2 py-1.5 text-sm">
                     <div className="size-8 rounded-lg overflow-hidden bg-sidebar-primary/10 flex items-center justify-center font-medium text-xs border border-sidebar-border shrink-0">
                       {displayAvatar ? (
-                        <img
+                        <Image
                           src={displayAvatar}
                           alt={name}
+                          width={32}
+                          height={32}
                           className="size-full object-cover"
+                          unoptimized
                         />
                       ) : (
                         <span>{name.charAt(0).toUpperCase()}</span>
@@ -242,7 +251,7 @@ export default function DashboardSidebar({
       {/* Main content */}
       <main className="flex-1 h-svh overflow-y-auto relative bg-slate-50/30 dark:bg-zinc-950/20">
         {/* Ambient background decoration */}
-        <div className="absolute top-0 right-0 w-[350px] h-[350px] bg-emerald-500/[0.04] dark:bg-emerald-500/[0.07] rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[350px] h-[350px] bg-emerald-500/4 dark:bg-emerald-500/7 rounded-full blur-[100px] pointer-events-none" />
 
         {/* Top Header */}
         <div className="sticky top-0 z-30 flex items-center gap-2 border-b bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md px-4 py-2.5">
