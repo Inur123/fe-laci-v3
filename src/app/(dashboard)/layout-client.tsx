@@ -4,11 +4,11 @@
 
 import { signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, LogOut, MoreHorizontal } from "lucide-react";
+import { LayoutDashboard, LogOut, MoreHorizontal, User, KeyRound } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -79,7 +79,6 @@ export default function DashboardSidebar({
 
   const name = session?.user?.name || "User";
   const email = session?.user?.email || "";
-  const avatar = session?.user?.image || "";
 
   // Resolusi URL Avatar dari Server API SSO
   function resolveAvatar(url: string) {
@@ -89,7 +88,29 @@ export default function DashboardSidebar({
     return `${baseUrl}${url}`;
   }
 
-  const displayAvatar = resolveAvatar(avatar);
+  const [avatarUrl, setAvatarUrl] = useState(session?.user?.image ?? "");
+
+  // Fetch avatar terbaru dari SSO API agar foto selalu up-to-date
+  // (JWT di-cache saat login, jadi kalau user ganti foto di SSO portal perlu re-fetch)
+  useEffect(() => {
+    const accessToken = session?.accessToken;
+    const ssoApiUrl = process.env.NEXT_PUBLIC_SSO_API_URL || "";
+    if (!accessToken || !ssoApiUrl) return;
+    fetch(`${ssoApiUrl}/v1/user/me`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      cache: "no-store",
+    })
+      .then((r) => r.json())
+      .then((res) => {
+        const img = res?.data?.image;
+        if (img !== undefined) {
+          setAvatarUrl(img ?? "");
+        }
+      })
+      .catch(() => {/* silent fail */});
+  }, [session]);
+
+  const displayAvatar = resolveAvatar(avatarUrl) || resolveAvatar(session?.user?.image ?? "") || "";
 
   return (
     <>
@@ -233,6 +254,25 @@ export default function DashboardSidebar({
                       </span>
                     </div>
                   </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() =>
+                      window.open(`${process.env.NEXT_PUBLIC_SSO_URL}/profile`, "_blank")
+                    }
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    Ubah Profil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() =>
+                      window.open(`${process.env.NEXT_PUBLIC_SSO_URL}/security`, "_blank")
+                    }
+                  >
+                    <KeyRound className="mr-2 h-4 w-4" />
+                    Ubah Password
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="text-destructive focus:text-destructive cursor-pointer"

@@ -48,7 +48,8 @@ export default async function Home() {
               Masuk ke Aplikasi
             </CardTitle>
             <CardDescription className="text-sm text-slate-500">
-              Gunakan akun Single Sign-On (SSO) resmi pelajarnumagetan.or.id Kakak untuk melanjutkan.
+              Gunakan akun Single Sign-On (SSO) resmi pelajarnumagetan.or.id
+              anda untuk melanjutkan.
             </CardDescription>
           </CardHeader>
 
@@ -70,7 +71,8 @@ export default async function Home() {
 
           <CardFooter className="pb-6">
             <p className="text-[10px] text-center text-slate-450 leading-normal w-full px-2">
-              Dengan mengeklik tombol di atas, Kakak akan diarahkan secara aman ke portal akun utama Pelajar NU Magetan.
+              Dengan mengeklik tombol di atas, anda akan diarahkan secara aman
+              ke portal akun utama Pelajar NU Magetan.
             </p>
           </CardFooter>
         </Card>
